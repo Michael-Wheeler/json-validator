@@ -1,22 +1,16 @@
 version: "3"
 
 services:
-
-  redis:
-    image: redis:3.2-alpine
+  cassandra:
+    image: cassandra:4.0.2
     ports:
-      - "6379"
+      - 9042:9042
     volumes:
       - db-data:/data
     networks:
       - database
-    deploy:
-      mode: replicated
-      replicas: 1
-      placement:
-        constraints: [ node.role == manager ]
 
-  api:
+  app:
     build:
       dockerfile: ./docker/web/Dockerfile
       context: ./
@@ -25,7 +19,7 @@ services:
     networks:
       - database
     depends_on:
-      - redis
+      - cassandra
     deploy:
       mode: replicated
       replicas: 2

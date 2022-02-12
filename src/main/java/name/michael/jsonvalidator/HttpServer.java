@@ -10,8 +10,7 @@ public class HttpServer {
             config.enableDevLogging();
         }).start(7000);
 
-        app.get("/", ctx -> ctx.result("Hello!"));
-        app.get("/hello-world", ctx -> ctx.result("Hello World"));
+        app.get("/hello", ctx -> ctx.result("Hello World"));
         app.get("/api/v1/schema/<schema-id>", SchemaController::getSchemaById);
         app.post("/api/v1/schema/<schema-id>", SchemaController::createSchema);
         app.post("/api/v1/validate/<schema-id>", ValidateController::validateJson);
