@@ -1,8 +1,10 @@
 package name.michael.jsonvalidator.application.validate;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import io.javalin.http.Context;
 import io.javalin.http.HttpCode;
-import name.michael.jsonvalidator.domain.schema.Schema;
 import name.michael.jsonvalidator.domain.validate.ValidateService;
 import name.michael.jsonvalidator.infrastructure.exception.DatabaseConnectionException;
 import name.michael.jsonvalidator.infrastructure.exception.EntryNotFoundException;
@@ -19,8 +21,19 @@ public class ValidateController {
 
     public static void validateJson(Context ctx) {
         String schemaId = ctx.pathParam("schema-id");
+
+        ObjectMapper mapper = new ObjectMapper();
+        ObjectNode json;
         try {
-            Schema schema = new FileSystemSchemaRepository().getSchemaById(schemaId);
+            json = (ObjectNode) mapper.readTree(ctx.body());
+        } catch (JsonProcessingException e) {
+            ctx.status(HttpCode.BAD_REQUEST);
+            createErrorJsonResponse(ctx, "uploadSchema", schemaId, "Invalid JSON body provided");
+            return;
+        }
+
+        try {
+            new ValidateService(new FileSystemSchemaRepository()).validateJson(json, schemaId);
         } catch (DatabaseConnectionException e) {
             ctx.status(HttpCode.INTERNAL_SERVER_ERROR);
             createErrorJsonResponse(ctx, "downloadSchema", schemaId, "Internal server error");

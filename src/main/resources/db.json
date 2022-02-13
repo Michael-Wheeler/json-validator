@@ -1,1 +1,30 @@
-[{"id":"unique","schema":{"id":123,"schema":"test"}}]
+{
+  "type": "object "
+  properties
+  " : "
+  rectangle
+  " : {"
+  $ref
+  " : "
+  #
+  /definitions/Rectangle
+  "  } "
+  definitions
+  " : "
+  size
+  "  "
+  type
+  " : "
+  numb
+  "minimum": "Rectangle"
+  "type": "obje "
+  properties
+  " "
+  a
+  " : {"
+  $ref
+  " : "
+  #
+  /definitions/size
+  "b": {
+    "$ref": "#/definitions/size }},

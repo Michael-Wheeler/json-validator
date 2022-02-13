@@ -11,6 +11,9 @@ import name.michael.jsonvalidator.infrastructure.exception.DatabaseConnectionExc
 import name.michael.jsonvalidator.infrastructure.exception.EntryNotFoundException;
 import name.michael.jsonvalidator.infrastructure.schema.FileSystemSchemaRepository;
 import name.michael.jsonvalidator.infrastructure.schema.SchemaRepositoryInterface;
+import org.everit.json.schema.SchemaException;
+import org.everit.json.schema.loader.SchemaLoader;
+import org.json.JSONObject;
 
 import java.util.List;
 
@@ -29,15 +32,18 @@ public class SchemaController {
 
         ObjectMapper mapper = new ObjectMapper();
         ObjectNode schemaJson;
+
         try {
             schemaJson = (ObjectNode) mapper.readTree(ctx.body());
+            JSONObject inputJsonObject = new JSONObject(mapper.writeValueAsString(schemaJson));
+            SchemaLoader.load(inputJsonObject);
         } catch (JsonProcessingException e) {
             ctx.status(HttpCode.BAD_REQUEST);
             createErrorJsonResponse(ctx, "uploadSchema", schemaId, "Schema is invalid JSON");
             return;
-        } catch (ClassCastException $e) {
+        } catch (ClassCastException | SchemaException $e) {
             ctx.status(HttpCode.UNPROCESSABLE_ENTITY);
-            createErrorJsonResponse(ctx, "uploadSchema", schemaId, "Schema must be a JSON object");
+            createErrorJsonResponse(ctx, "uploadSchema", schemaId, "Invalid JSON schema provided");
             return;
         }
 

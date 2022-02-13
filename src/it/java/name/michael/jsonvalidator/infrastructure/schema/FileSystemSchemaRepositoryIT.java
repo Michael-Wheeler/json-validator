@@ -31,7 +31,6 @@ public class FileSystemSchemaRepositoryIT {
 
     @Test
     public void testDeleteSchemaByIdShouldRemoveSchemaFromFile() throws DatabaseConnectionException, EntryNotFoundException, JsonProcessingException, AlreadyExistsException {
-
         String json = "{ \"id\" : 123, \"description\" : \"test\" }";
         ObjectMapper mapper = new ObjectMapper();
         ObjectNode objectNode = mapper.readTree(json).deepCopy();
