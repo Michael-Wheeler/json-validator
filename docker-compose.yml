@@ -1,31 +1,12 @@
-version: "3"
+version: "3.7"
 
 services:
-  cassandra:
-    image: cassandra:4.0.2
-    ports:
-      - 9042:9042
-    volumes:
-      - db-data:/data
-    networks:
-      - database
-
   app:
     build:
       dockerfile: ./docker/web/Dockerfile
       context: ./
     ports:
       - 7000:7000
-    networks:
-      - database
-    depends_on:
-      - cassandra
     deploy:
       mode: replicated
       replicas: 2
-
-networks:
-  database:
-
-volumes:
-  db-data:
