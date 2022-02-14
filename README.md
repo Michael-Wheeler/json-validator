@@ -21,7 +21,9 @@ This API which enables the uploading of JSON schemas to be used for the validati
 The server will now be running on [`localhost:7000`](http://localhost:7000).
 
 ### Not included
-As it has been a while since I have developed with Java, there were a few features which I have left out which I would ideally have added but that do not prevent the application from meeting the defined requirements. These are: 
+As it has been a while since I have developed with Java, there were a few features which I have left out which I would ideally have added but that do not prevent the application from meeting the defined requirements. The main shortcut was the use of a filesystem repository. I would have used a NoSQL database (MongoDB) in this scenario as we do not require relationships between tables and would easily scale horizontally to manage the large number of schemas we may need to store.
+
+The full list of omissions is:
 * Caching
 * Database (filesystem used for POC)
 * Dependency injection
@@ -73,7 +75,7 @@ curl --location --request POST 'localhost:7000/api/v1/schema/{schema-id}' \
 
 Validate JSON against a schema
 ```
-curl --location --request POST 'localhost:7000/api/v1/validate/example' \
+curl --location --request POST 'localhost:7000/api/v1/validate/{schema-id}' \
 --header 'Content-Type: application/json' \
 --data-raw '{
   "source": "/home/alice/image.iso",
