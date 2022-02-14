@@ -10,3 +10,8 @@ services:
     deploy:
       mode: replicated
       replicas: 2
+    volumes:
+      - db-data:/database
+
+volumes:
+  db-data:

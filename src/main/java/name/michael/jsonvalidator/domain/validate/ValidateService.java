@@ -1,8 +1,8 @@
 package name.michael.jsonvalidator.domain.validate;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import name.michael.jsonvalidator.domain.schema.Schema;
 import name.michael.jsonvalidator.infrastructure.exception.DatabaseConnectionException;
 import name.michael.jsonvalidator.infrastructure.exception.EntryNotFoundException;
@@ -20,14 +20,12 @@ public class ValidateService {
         this.repo = repo;
     }
 
-    public String validateJson(ObjectNode inputJson, String schemaId) throws DatabaseConnectionException, EntryNotFoundException {
-//        Schema schema = new FileSystemSchemaRepository().getSchemaById(schemaId);
+    public String validateJson(JsonNode inputJson, String schemaId) throws DatabaseConnectionException, EntryNotFoundException {
         Schema schema = repo.getSchemaById(schemaId);
 
-
         try {
-            JSONObject schemaObject = objectNodeToJsonObject(schema.getSchema());
-            JSONObject inputJsonObject = objectNodeToJsonObject(inputJson);
+            JSONObject schemaObject = jsonNodeToJsonObject(schema.getSchema());
+            JSONObject inputJsonObject = jsonNodeToJsonObject(inputJson);
 
             org.everit.json.schema.Schema validator = SchemaLoader.load(schemaObject);
             validator.validate(inputJsonObject);
@@ -40,7 +38,7 @@ public class ValidateService {
         return null;
     }
 
-    private JSONObject objectNodeToJsonObject(ObjectNode node) throws JsonProcessingException {
+    private JSONObject jsonNodeToJsonObject(JsonNode node) throws JsonProcessingException {
         ObjectMapper mapper = new ObjectMapper();
         return new JSONObject(mapper.writeValueAsString(node));
     }
@@ -49,6 +47,13 @@ public class ValidateService {
         StringBuilder builder = new StringBuilder();
 
         for (ValidationException e : errors) {
+//            Pattern p = Pattern.compile("\\W(found: Null)\\W");
+//            Matcher m = p.matcher(e.getMessage());
+//
+//            if (m.find()) {
+//                continue;
+//            }
+
             builder.append(e.getMessage()).append(", ");
         }
 

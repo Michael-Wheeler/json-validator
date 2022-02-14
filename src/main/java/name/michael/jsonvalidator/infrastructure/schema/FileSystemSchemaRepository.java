@@ -35,7 +35,7 @@ public class FileSystemSchemaRepository implements SchemaRepositoryInterface {
 
         File classFile = new File(FileSystemSchemaRepository.class.getProtectionDomain().getCodeSource().getLocation().getPath());
         jsonFilePath = classFile.getPath().equals("/json-schema-validator-with-dependencies.jar")
-                ? "/tmp/db.json"
+                ? "/database/db.json"
                 : Paths.get(classFile.getPath()) + "/../db.json";
 
         File f = new File(jsonFilePath);
