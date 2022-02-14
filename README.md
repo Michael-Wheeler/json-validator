@@ -29,7 +29,7 @@ As it has been a while since I have developed with Java, there were a few featur
 * Rate limits
 * Full testing suite. Tests have been used to aid development but some classes have not been fully tested and error paths are untested
 
-###Example useage
+### Example useage
 Get a schema by its ID
 ```
 curl --location --request GET 'localhost:7000/api/v1/schema/{schema-id}'
